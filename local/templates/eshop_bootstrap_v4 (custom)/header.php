@@ -218,3 +218,8 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH.'/js/main.js');
 			<div class="row">
 			<?$needSidebar = preg_match("~^".SITE_DIR."(catalog|personal\/cart|personal\/order\/make)/~", $curPage);?>
 				<div class="bx-content <?=($needSidebar ? "col" : "col-md-9 col-sm-8")?>">
+                    <script>
+                        BX.message({NO_ERRORS:'<?=Bitrix\Main\Localization\Loc::getMessage("NO_ERRORS")?>'});
+                        BX.message({ERRORS_FOUND:'<?=Bitrix\Main\Localization\Loc::getMessage("ERRORS_FOUND")?>'});
+                        BX.message({YOU_MEANT:'<?=Bitrix\Main\Localization\Loc::getMessage("YOU_MEANT")?>'});
+                    </script>

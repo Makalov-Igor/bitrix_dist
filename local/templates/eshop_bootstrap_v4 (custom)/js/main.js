@@ -32,17 +32,17 @@ document.addEventListener('keyup',async function (e) {
 
         if(result.length == 0){
             content =
-                `<div class="popup_title">Орфографические ошибки не обнаружены.</div>`;
+                `<div class="popup_title">${BX.message('NO_ERRORS')}</div>`;
         }
         else {
             content = `<div class="popup_title">
-                        Обнаружены орфографические ошибки:
+                        ${BX.message('ERRORS_FOUND')}
                         </div><div class="error_list">`
 
             result.forEach(element => {
 
             content += `<span style="color: red;">${element['word']}</span>` +
-                `<br> - возможно Вы имели в виду: <br><ul>`;
+                `<br>${BX.message('YOU_MEANT')}<br><ul>`;
 
                 element.s.forEach(element => {
                     content += element+"<br>";
