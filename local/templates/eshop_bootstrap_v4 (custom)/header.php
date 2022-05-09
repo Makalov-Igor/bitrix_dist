@@ -1,4 +1,8 @@
-<?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+<?
+
+use Bitrix\Main\Page\Asset;
+
+if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
 IncludeTemplateLangFile($_SERVER["DOCUMENT_ROOT"]."/bitrix/templates/".SITE_TEMPLATE_ID."/header.php");
 CJSCore::Init(array("fx"));
 
@@ -11,6 +15,8 @@ if (isset($_GET["theme"]) && in_array($_GET["theme"], array("blue", "green", "ye
 $theme = COption::GetOptionString("main", "wizard_eshop_bootstrap_theme_id", "green", SITE_ID);
 
 $curPage = $APPLICATION->GetCurPage(true);
+
+Asset::getInstance()->addJs(SITE_TEMPLATE_PATH.'/js/main.js');
 
 ?><!DOCTYPE html>
 <html xml:lang="<?=LANGUAGE_ID?>" lang="<?=LANGUAGE_ID?>">

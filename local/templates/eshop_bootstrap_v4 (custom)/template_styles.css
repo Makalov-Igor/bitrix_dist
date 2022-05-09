@@ -371,3 +371,14 @@ a:hover,
 	background-image: url(images/phone_white.svg);
 	background-size: auto 21px ;
 }
+
+.popup_title {
+	font-size: 15px;
+	color: #484848;
+	margin-top: 25px;
+	font-weight: bold;
+}
+
+.error_list{
+	padding: 19px;
+}
