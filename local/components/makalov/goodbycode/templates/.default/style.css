@@ -1,0 +1,21 @@
+#good_container {
+    display: none;
+}
+
+#good_info {
+    width: 60%;
+    margin: 20px;
+}
+
+#good_params{
+    padding-top: 25px;
+    display: flex;
+    flex-direction: column;
+}
+#image{
+    width: 150px;
+    height: 200px;
+    background-repeat: no-repeat !important;
+    background-size : 100% auto !important;
+    margin: 10px;
+}
