@@ -24,3 +24,40 @@
     text-align: right;
     font-weight: bold;
 }
+
+#xml_input{
+    outline: 0;
+    outline-offset: 0;
+    width: 578px;
+    margin-right: 5px;
+    text-align: center;
+}
+
+#add_to_basket {
+    display: flex;
+    justify-content: right;
+    margin-top: 15px;
+    height: 40px;
+}
+
+ #search_container {
+    display: flex;
+    justify-content: left;
+    margin-top: 15px;
+    height: 40px;
+}
+
+
+#section {
+    margin-top: 15px;
+}
+
+#add_to_basket_link, #search_goods_button {
+    background-color: #63aa28;
+    color: white;
+    font-weight: 500;
+    border: olivedrab;
+    cursor: pointer;
+    outline: 0;
+    outline-offset: 0;
+}
