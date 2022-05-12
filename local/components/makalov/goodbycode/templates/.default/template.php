@@ -2,149 +2,171 @@
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 ?>
-<div id="component_container">
-    <a href="javascript:void(0)" onclick="addSection()">Добавить поле</a
-    <div><input type="number" id="xml_input" placeholder="Код товара">
-        <button type="submit" id="search_goods_button">Найти товар</button>
-    </div>
-    <div id="good_params">
-        <div id="message"></div>
-        <div id="good_container">
-            <div id="image"></div>
-            <div id="good_info"><a id="name"></a>
-                <div id="description">
-                </div>
-            </div>
-        </div>
-    </div>
+<div id="component_container" data_id="<?=$arParams['IBLOCK_ID'];?>">
+    <a href="javascript:void(0)" onclick="addSection()">Добавить поле</a>
+</div>
+
+<script>
+
+    function addSection() {
+
+        let section = BX.create('div', {
+
+            props: {id: 'section'},
+
+            children: [
+
+                BX.create('div', {
 
 
-    <script>
+                    children: [
 
-        function addSection() {
+                        BX.create('input', {
 
-            let section = BX.create('div', {
-                props: {id: 'section'},
+                            props: {id: 'xml_input', placeholder: 'Код товара'},
 
-                children: [
+                        }),
 
-                    BX.create('div', {
+                        BX.create('button', {
 
-                        children: [
+                            props: {id: 'search_goods_button', type: 'submit'},
 
-                            BX.create('input', {
+                            text: 'Найти товар',
 
-                                props: {id: 'xml_input', placeholder: 'Код товара'},
+                            events: {
+                                click: getData,
+                            }
+                        }),
+                    ],
+                }),
 
-                            }),
+                BX.create('div', {
 
-                            BX.create('button', {
+                    props: {id: 'good_params'},
 
-                                props: {id: 'search_goods_button', type: 'submit'},
+                    children: [
 
-                                text: 'Найти товар',
+                        BX.create('div', {
 
-                                events: {
-                                    click: getData
-                                }
+                            props: {id: 'message'},
 
-                            }),
-                        ]
-                    }),
+                        }),
 
-                    BX.create('div', {
+                        BX.create('div', {
 
-                        props: {id: 'good_params'}
+                            props: {id: 'good_container'},
 
-                        children: [
+                            children: [
 
-                            BX.create('div', {
+                                BX.create('div', {
 
-                                props: {id: 'message'},
+                                    props: {id: 'image'},
 
-                            }),
+                                }),
 
-                            BX.create('div', {
+                                BX.create('div', {
 
-                                props: {id: 'good_container'},
+                                    props: {id: 'good_info'},
 
-                                children: [
+                                    children: [
 
-                                    BX.create('div', {
+                                        BX.create('a', {
 
-                                        props: {id: 'image'},
+                                            props: {id: 'name'},
 
-                                    }),
+                                        }),
 
-                                    BX.create('div', {
+                                        BX.create('div', {
 
-                                        props: {id: 'good_info'},
+                                            props: {id: 'description'},
 
-                                        children: [
+                                        }),
 
-                                            BX.create('a', {
+                                        BX.create('div', {
 
-                                                props: {id: 'name'},
+                                            props: {id: 'price'},
 
-                                            }),
+                                        }),
 
-                                            BX.create('div', {
+                                    ]
 
-                                                props: {id: 'description'},
+                                }),
+                            ]
 
-                                            }),
+                        }),
 
-                                        ]
+                    ],
 
-                                    }),
-                                ]
+                })
 
-                            }),
+            ]
+        })
+        BX.append(section, BX('component_container'));
+    }
 
-                        ],
+    addSection();
 
-                    })
+    let context;
 
-                    ]
+    function getData() {
+
+        context = this.parentElement.parentElement;
+
+        let message = context.querySelector('#message'),
+            name = context.querySelector('#name'),
+            goodContainer = context.querySelector('#good_container'),
+            description = context.querySelector('#description'),
+            price = context.querySelector('#price'),
+            image = context.querySelector('#image'),
+            text,item;
+
+        BX.ajax.runComponentAction('makalov:goodbycode', 'get', {
+            mode: 'class',
+            data: {
+                code: context.querySelector('#xml_input').value,
+                iblockId: document
+                    .querySelector('#component_container')
+                    .getAttribute('data_id')
             }
-            BX.append(section, BX('component_container'));
-        }
-            addSection();
+        })
+            .then(function (response) {
 
-            function getData() {
-
-                console.log('click')
-                console.log(this)
-
-                let context = this;
-                let item;
-
-                BX.ajax.runComponentAction('makalov:goodbycode', 'get', {
-                    mode: 'class',
-                    data: {
-                        code: BX('xml_input').value
-                    }
-                }).then(function (response) {
+                    console.log(response.data.result)
                     item = JSON.parse(response.data.result);
 
                     if (item) {
 
-                        context.querySelector('message').innerHTML = '';
-                        BX('good_container').setAttribute('style', 'display: flex');
-                        BX('image').style.background = `url('${item['DETAIL_PICTURE']}')`
-                        BX('name').innerHTML = item['NAME'];
-                        BX('name').setAttribute('href', `/catalog/${item['SECTION_CODE']}/${item['CODE']}/`);
-                        BX('description').innerHTML = `Описание: ${item['PREVIEW_TEXT']}`;
+                        if(item['PREVIEW_TEXT']){
+                            text = item['PREVIEW_TEXT']
+                        }
+                        else text = item['DETAIL_TEXT'];
+
+                        message.innerHTML = '';
+
+                        price.innerHTML = `${Math.round(item['BASE_PRICE'])} ${item['CURRENCY']}`;
+
+                        goodContainer.setAttribute('style', 'display: flex');
+
+                        name.innerHTML = item['NAME'];
+                        name.setAttribute('href', `/catalog/${item['SECTION_CODE']}/${item['CODE']}/`);
+
+                        description.innerHTML = `Описание: ${text}`;
+
+                        image.style.background = `url('${item['DETAIL_PICTURE']}')`
+
                     } else {
-                        BX('good_container').setAttribute('style', 'display: none');
-                        BX('message').innerHTML = 'Товар не найден';
+
+                        goodContainer.setAttribute('style', 'display: none');
+                        message.innerHTML = 'Товар не найден';
+
                     }
 
-                }, function (response) {
+                },
+                function (response) {
                     console.log(response);
                 });
 
-            }
+    }
 
 
-    </script>
+</script>

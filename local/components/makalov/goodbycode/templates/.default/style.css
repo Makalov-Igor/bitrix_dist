@@ -19,3 +19,8 @@
     background-size : 100% auto !important;
     margin: 10px;
 }
+
+#price {
+    text-align: right;
+    font-weight: bold;
+}

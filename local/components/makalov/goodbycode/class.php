@@ -9,10 +9,12 @@ class GoodsByCode extends CBitrixComponent implements Controllerable {
 
     private function checkModules()
     {
-        if ( !Loader::includeModule('iblock'))
+        if ( !Loader::includeModule('iblock') && !Loader::includeModule('catalog'))
         {
             throw new \Exception(Loc::getMessage('GOODBYCODE_COMPONENT_PATH_NAME'));
         }
+
+        Loader::includeModule('catalog');
 
         return true;
     }
@@ -26,16 +28,28 @@ class GoodsByCode extends CBitrixComponent implements Controllerable {
         ];
     }
 
-    public function getAction(string $code){
+    public function getAction(string $code, $iblockId){
 
         $this->checkModules();
 
         $good = \Bitrix\Iblock\ElementTable::query()
-            ->setSelect(['*','SECTION_CODE'=>'section.CODE','IBLOCK_CODE'=>'iblock.CODE'])
+
+            ->setSelect([
+                '*',
+                'SECTION_CODE'=>'section.CODE',
+                'IBLOCK_CODE'=>'iblock.CODE',
+                 "BASE_PRICE"=>"price.PRICE",
+                 "CURRENCY" => "price.CURRENCY"
+            ])
             ->registerRuntimeField('section',[
                 'data_type' =>  'Bitrix\Iblock\SectionTable',
                 'reference' => array('=this.IBLOCK_SECTION_ID' => 'ref.ID'),
             ])
+            ->registerRuntimeField('price',[
+                'data_type' =>  '\Bitrix\Catalog\PriceTable',
+                'reference' => array('=this.ID' => 'ref.PRODUCT_ID'),
+            ])
+            ->where(['IBLOCK_ID', $iblockId])
             ->where('XML_ID', $code);
 
         $result = $good->fetch();
@@ -52,6 +66,28 @@ class GoodsByCode extends CBitrixComponent implements Controllerable {
     public function ExecuteComponent () {
 
         $this->includeComponentTemplate();
+
+//        $good = \Bitrix\Iblock\ElementTable::query()
+//            ->setSelect([
+//                '*',
+//                'SECTION_CODE'=>'section.CODE',
+//                'IBLOCK_CODE'=>'iblock.CODE',
+//                "BASE_PRICE"=>"price.PRICE"
+//            ])
+//            ->registerRuntimeField('section',[
+//                'data_type' =>  'Bitrix\Iblock\SectionTable',
+//                'reference' => array('=this.IBLOCK_SECTION_ID' => 'ref.ID'),
+//            ])
+//            ->registerRuntimeField('price',[
+//                'data_type' =>  '\Bitrix\Catalog\PriceTable',
+//                'reference' => array('=this.ID' => 'ref.PRODUCT_ID'),
+//            ])
+//            ->setFilter(['IBLOCK_ID'=> 3])
+//                ->where('XML_ID', 232);
+//
+//        $result = $good->fetch();
+
+        \Bitrix\Main\Diag\Debug::dump($result);
 
         }
 
