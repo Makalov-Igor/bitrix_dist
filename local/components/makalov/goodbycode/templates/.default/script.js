@@ -30,7 +30,7 @@ BX.ready(function () {
 
                         BX.create('input', {
 
-                            props: {id: 'xml_input', placeholder: 'Код товара'},
+                            props: {id: 'xml_input', placeholder: BX.message('GOOD_CODE')},
 
                         }),
 
@@ -38,7 +38,7 @@ BX.ready(function () {
 
                             props: {id: 'search_goods_button', type: 'submit'},
 
-                            text: 'Найти товар',
+                            text: BX.message('SEARCH_ITEM'),
 
                             events: {
                                 click: getData,
@@ -105,7 +105,15 @@ BX.ready(function () {
 
                                                     props: {id: 'add_to_basket_link'},
 
-                                                    text: "Добавить в корзину",
+                                                    children: [
+                                                        BX.create('a', {
+
+                                                            props: {id: 'basket_link'},
+
+                                                            text: BX.message('ADD_TO_BASKET'),
+
+                                                        })
+                                                    ],
 
                                                     events: {
                                                         click: add
@@ -162,6 +170,10 @@ BX.ready(function () {
         })
             .then(function (response) {
                     BX.onCustomEvent('OnBasketChange');
+                    context.querySelector('#basket_link')
+                        .innerHTML = BX.message('IN_BASKET');
+                    context.querySelector('#basket_link')
+                        .setAttribute('href','/personal/cart/');
                 },
                 function (response) {
                     console.log(response);
@@ -216,14 +228,14 @@ BX.ready(function () {
                         name.innerHTML = item['NAME'];
                         name.setAttribute('href', `/catalog/${item['SECTION_CODE']}/${item['ORIGINAL_PRODUCT_CODE']}/`);
 
-                        description.innerHTML = `Описание: ${text}`;
+                        description.innerHTML = BX.message('DESCRIPTION') + text;
 
                         image.style.background = `url('${item['DETAIL_PICTURE']}')`
 
                     } else {
 
                         goodContainer.setAttribute('style', 'display: none');
-                        message.innerHTML = 'Товар не найден';
+                        message.innerHTML = BX.message('DONT_FOUND');
 
                     }
 

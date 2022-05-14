@@ -47,7 +47,6 @@
     height: 40px;
 }
 
-
 #section {
     margin-top: 15px;
 }
@@ -55,9 +54,15 @@
 #add_to_basket_link, #search_goods_button {
     background-color: #63aa28;
     color: white;
+    width: 180px;
     font-weight: 500;
     border: olivedrab;
     cursor: pointer;
     outline: 0;
     outline-offset: 0;
+}
+
+#basket_link {
+    color: white;
+    text-decoration:none;
 }
